@@ -5,7 +5,7 @@
 ---
 
 ## ✨ 功能特色
-- 🔍 **OCR 辨識**：使用 Gemini 2.5 Pro 模型，支援 PDF 及圖片檔案。
+- 🔍 **OCR 辨識**：使用 Gemini 2.5 Flash 模型，支援 PDF 及圖片檔案。
 - 📊 **自動結構化**：依指定欄位抽取資料並格式化為 JSON。
 - 📥 **匯出美化 Excel**：
   - 固定欄寬、標題藍底白字加粗
@@ -17,7 +17,7 @@
 
 ## 🛠️ 技術架構
 - **前端框架**：[Streamlit](https://streamlit.io/)
-- **OCR 模型**：Google [Gemini 2.5 Pro](https://ai.google.dev/)
+- **OCR 模型**：Google [Gemini 2.5 Flash](https://ai.google.dev/)
 - **資料處理**：Pandas
 - **Excel 美化**：OpenPyXL
 
@@ -27,8 +27,8 @@
 
 ### 1️⃣ 下載專案
 ```bash
-git clone https://github.com/ckped/one_click_goledncard_review.git
-cd auto_aiV3.py
+git clone https://github.com/IanChen-adi/one_click_goldencard_review.git
+cd one_click_goldencard_review
 ```
 
 ### 2️⃣ 安裝依賴套件
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ### 3️⃣ 設定環境變數（本地）
 在專案根目錄建立 .env 檔案，內容如下：
 ```bash
-GENIMI_API_KEY=你的_Gemini_API_Key
+GEMINI_API_KEY=你的_Gemini_API_Key
 ```
 ### 4️⃣ 執行 Streamlit App
 ```bash

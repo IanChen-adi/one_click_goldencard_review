@@ -12,14 +12,14 @@ from openpyxl.styles import Font, PatternFill, Alignment
 # ✅ 讀取環境變數
 from dotenv import load_dotenv
 load_dotenv()
-API_KEY = os.getenv("GENIMI_API_KEY")
+API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
-    st.error("❌ 找不到環境變數 GENIMI_API_KEY，請先設定後重新執行")
+    st.error("❌ 找不到環境變數 GEMINI_API_KEY，請先設定後重新執行")
 else:
     genai.configure(api_key=API_KEY)
 
 # ✅ 模型與欄位設定
-model = genai.GenerativeModel("gemini-2.5-pro")
+model = genai.GenerativeModel("gemini-2.5-flash")
 COLUMN_ORDER = [
     "英文名字＋英文姓氏",
     "中文姓名",
@@ -48,7 +48,7 @@ OCR_PROMPT = """
 {
 "英文名字＋英文姓氏": "string",
 "中文姓名": "string",
-"現職公司: "string",
+"現職公司": "string",
 "現職職稱": "string",
 “教育背景(學校)": "string，因學歷涵蓋大學、研究所和博士等，如有提供不同階段的學歷證明或說明，選擇最高學歷的學校為主",
 “教育背景(系所)": "string",輸出格式為 學位_系所名稱或專業領域名稱”,

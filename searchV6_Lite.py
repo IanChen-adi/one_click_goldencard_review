@@ -42,15 +42,20 @@ if st.button("開始查詢"):
     # --- 篩選 helper 函式 ---
     def make_filter(table_alias, field, use_group=False, name_field="project_name"):
         clause = ""
+        params = []
         if company_name_input:
-             clause += f" AND {table_alias}.company_name LIKE '%{company_name_input}%'"
+            clause += f" AND {table_alias}.company_name LIKE ?"
+            params.append(f"%{company_name_input}%")
         elif company_id_input:
-            clause += f" AND {table_alias}.{field} = '{company_id_input}'"
+            clause += f" AND {table_alias}.{field} = ?"
+            params.append(company_id_input)
         if selected_year:
-            clause += f" AND {table_alias}.apply_year = {selected_year}"
+            clause += f" AND {table_alias}.apply_year = ?"
+            params.append(selected_year)
         if use_group and selected_group:
-            clause += f" AND trim({table_alias}.\"group\") = '{selected_group}'"
-        return clause
+            clause += f" AND trim({table_alias}.\"group\") = ?"
+            params.append(selected_group)
+        return clause, params
     # --- 研發資料 ---
     rd_query = """
         SELECT a.*, b.apply_amount, b.approved
@@ -61,9 +66,10 @@ if st.button("開始查詢"):
            AND a.project_name = b.project_name
         WHERE 1=1
     """
-    rd_query += make_filter('a', 'company_id', use_group=True,name_field='project_name')
+    rd_filter, rd_params = make_filter('a', 'company_id', use_group=True, name_field='project_name')
+    rd_query += rd_filter
 
-    rd_df = pd.read_sql(rd_query, conn)
+    rd_df = pd.read_sql(rd_query, conn, params=rd_params)
 
     # 改中文欄位
     rd_df = rd_df.rename(columns={
@@ -121,9 +127,10 @@ if st.button("開始查詢"):
            AND a.plan_name = b.plan_name
         WHERE 1=1
     """
-    smart_query += make_filter('a', 'company_id',name_field='plan_name')
+    smart_filter, smart_params = make_filter('a', 'company_id', name_field='plan_name')
+    smart_query += smart_filter
 
-    raw_smart = pd.read_sql(smart_query, conn)
+    raw_smart = pd.read_sql(smart_query, conn, params=smart_params)
 
     mapping = {
         '資安產業': '新興跨域組',
@@ -194,14 +201,18 @@ if st.button("開始查詢"):
 
     # --- 上市櫃資料 ---
     ipo_query = "SELECT * FROM ipo_info WHERE 1=1"
+    ipo_params = []
     if company_name_input:
-        ipo_query += f" AND company_name LIKE '%{company_name_input}%'"
+        ipo_query += " AND company_name LIKE ?"
+        ipo_params.append(f"%{company_name_input}%")
     elif company_id_input:
-        ipo_query += f" AND company_id = '{company_id_input}'"
+        ipo_query += " AND company_id = ?"
+        ipo_params.append(company_id_input)
     if selected_group:
-        ipo_query += f" AND trim(\"group\") = '{selected_group}'"
+        ipo_query += " AND trim(\"group\") = ?"
+        ipo_params.append(selected_group)
 
-    ipo_df = pd.read_sql(ipo_query, conn)
+    ipo_df = pd.read_sql(ipo_query, conn, params=ipo_params)
     # 日期轉民國年 #轉中文欄位
     ipo_df = ipo_df.rename(columns={
         "company_id": "公司統編",
