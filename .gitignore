@@ -1,4 +1,5 @@
 .env
 mydb.sqlite
+searchV6_Lite.py
 __pycache__/
 *.pyc
